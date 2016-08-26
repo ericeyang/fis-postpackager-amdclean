@@ -3,7 +3,7 @@
  * @Date:   2016-08-24 20:17:17
  * Packed AMD File And Converts AMD Code To Standard JavaScript
  * @Last Modified by:   wangchao
- * @Last Modified time: 2016-08-26 11:09:22
+ * @Last Modified time: 2016-08-26 16:14:39
  */
 'use strict';
 const amdclean = require('amdclean');
@@ -14,10 +14,19 @@ const uglifyJs = require('uglify-js');
 module.exports = function(res, packs, config) {
 	/*入口主函数*/
 	var main = (function() {
-		var source = config.source.replace(/.js$/i, ''),
-			baseUrl = source.substr(0, source.lastIndexOf('/')), //源文件目录
-			baseMod = source.substr(source.lastIndexOf('/') + 1), //入口模块
-			output = config.output; //输出文件
+		if (typeof(config.source) == 'object') {
+			for (var i = 0, len = config.source.length; i < len; i++) {
+				doAction(config.source[i], config.output[i]);
+			}
+		} else {
+			doAction(config.source, config.output);
+		}
+	})();
+
+	function doAction(source, output) {
+		source = source.replace(/.js$/i, '');
+		var baseUrl = source.substr(0, source.lastIndexOf('/')), //源文件目录
+			baseMod = source.substr(source.lastIndexOf('/') + 1); //入口模块
 
 		//requirejs合并文件输出
 		var exec = childProcess.exec,
@@ -53,5 +62,5 @@ module.exports = function(res, packs, config) {
 				}
 			});
 		});
-	})();
+	}
 }
