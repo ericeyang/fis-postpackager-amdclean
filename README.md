@@ -11,8 +11,8 @@ npm install --save fis-postpackager-amdclean
 //file : path/to/project/fis-conf.js
 fis.match('::package', {
     postpackager: fis.plugin('amdclean', {
-        source: 'sdk/MasterTv/MasterTV.js',
-        output: base.outpath + '/lib/MasterTV-min.js'
+        source: 'src/MasterTV.js',
+        output: '../output/MasterTV-min.js'
     })
 });
 ```
