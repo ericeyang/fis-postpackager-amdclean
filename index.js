@@ -3,7 +3,7 @@
  * @Date:   2016-08-24 20:17:17
  * Packed AMD File And Converts AMD Code To Standard JavaScript
  * @Last Modified by:   wangchao
- * @Last Modified time: 2016-08-26 16:14:39
+ * @Last Modified time: 2016-08-30 20:06:33
  */
 'use strict';
 const amdclean = require('amdclean');
@@ -30,7 +30,7 @@ module.exports = function(res, packs, config) {
 
 		//requirejs合并文件输出
 		var exec = childProcess.exec,
-			command = exec('./node_modules/requirejs/bin/r.js -o baseUrl=' + baseUrl + ' name=' + baseMod + ' out=' + output + ' optimize=none');
+			command = exec('node ./node_modules/requirejs/bin/r.js -o baseUrl=' + baseUrl + ' name=' + baseMod + ' out=' + output + ' optimize=none');
 
 		//命令退出执行文件处理
 		command.on('exit', function(code) {
@@ -62,5 +62,12 @@ module.exports = function(res, packs, config) {
 				}
 			});
 		});
+
+        command.stdout.on('data', function (data) {
+            if (!config.debug) {
+                return;
+            }
+            console.log(data);
+        });
 	}
 }

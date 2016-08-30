@@ -12,7 +12,8 @@ npm install --save fis-postpackager-amdclean
 fis.match('::package', {
     postpackager: fis.plugin('amdclean', {
         source: 'src/main.js',
-        output: '../output/main-min.js'
+        output: '../output/main-min.js',
+        debug: true
     })
 });
 
