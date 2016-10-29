@@ -8,22 +8,22 @@ npm install --save fis-postpackager-amdclean
 
 ## settings
 ```javascript
-//file : path/to/project/fis-conf.js
 fis.match('::package', {
-    postpackager: fis.plugin('amdclean', {
-        source: 'src/main.js',
-        output: '../output/main-min.js',
-        debug: true
-    })
-});
-
-or
-
-fis.match('::package', {
-    postpackager: fis.plugin('amdclean', {
-        source: ['src/main.js', 'lib/main.js'],
-        output: ['../output/src-min.js', '../output/lib-main.js']
-    })
+    packager: fis.plugin('map', {
+	    '/lib/min.js': '/sdk/**.js'
+	}),
+    postpackager: [
+        fis.plugin('amdclean', {
+            config: [
+	            {
+	                main: '/sdk/main.js', //入口文件
+	                release: '/lib/min.js' //输出文件
+	            }
+            ],
+            minify: true, //是否压缩
+            debug: true //是否打印日志
+        })
+    ]
 });
 
 ```
