@@ -3,7 +3,7 @@
  * @Date:   2016-08-24 20:17:17
  * Packed AMD File And Converts AMD Code To Standard JavaScript
  * @Last Modified by:   wangchao
- * @Last Modified time: 2016-10-29 16:37:13
+ * @Last Modified time: 2016-11-11 11:04:29
  */
 'use strict';
 const amdclean = require('amdclean');
@@ -23,9 +23,28 @@ module.exports = function (ret, pack, settings, opt) {
         }
     })();
 
+    // 删除目录及下面的文件
+    function deleteFolderRecursive(dirname) {
+        var files = [];
+        if (fs.existsSync(dirname)) {
+            files = fs.readdirSync(dirname);
+            files.forEach(function (file, index) {
+                var curPath = dirname + '/' + file;
+                if (fs.statSync(curPath).isDirectory()) { // recurse
+                    deleteFolderRecursive(curPath, true);
+                } else { // delete file
+                    fs.unlinkSync(curPath);
+                }
+            });
+            fs.rmdirSync(dirname);
+        }
+    }
+
     function doAction(config) {
         var file = ret['pkg'][config.release];
-        if(!file)return;
+        if (!file) {
+            return;
+        }
 
         var content = '';
         var isReturn = false;
@@ -36,7 +55,7 @@ module.exports = function (ret, pack, settings, opt) {
 
         // requirejs合并文件输出
         var exec = childProcess.exec;
-        var tempFile = '../'+(+new Date())+'.js';
+        var tempFile = '../../.amdclean/' + (+new Date()) + '.js';
         var command = exec('node ./node_modules/requirejs/bin/r.js -o baseUrl=' + baseUrl + ' name=' + baseMod + ' out=' + tempFile + ' optimize=none');
 
         // 命令退出执行文件处理
@@ -60,7 +79,6 @@ module.exports = function (ret, pack, settings, opt) {
                     }
 
                     console.log('打包文件成功');
-                    fs.unlinkSync(tempFile);
                 }
                 isReturn = true;
             });
@@ -85,15 +103,17 @@ module.exports = function (ret, pack, settings, opt) {
             }
         }
 
-        if(settings.domain){
+        if (settings.domain) {
             file.domain = settings.domain;
         }
-        if(settings.url){
-            file.url = settings.url + file.url.substr(file.url.lastIndexOf('/')+1);
+        if (settings.url) {
+            file.url = settings.url + file.url.substr(file.url.lastIndexOf('/') + 1);
         }
-        
+
         file.setContent(content);
 
         fis.set(config.release, file.getUrl());
+
+        deleteFolderRecursive('../../.amdclean/');
     }
 };
