@@ -1,6 +1,6 @@
 {
 	"name": "fis3-postpackager-amdclean",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Packed AMD File And Converts AMD Code To Standard JavaScript",
 	"main": "index.js",
 	"repository": {
@@ -8,8 +8,16 @@
 		"url": "https://github.com/ericeyang/fis-postpackager-amdclean"
 	},
 	"keywords": [
-		"fis", "fis3", "package", "amd", "compress", "uglify-js",
-		"amdclear", "amdclean", "requirejs", "r.js"
+		"fis",
+		"fis3",
+		"package",
+		"amd",
+		"compress",
+		"uglify-js",
+		"amdclear",
+		"amdclean",
+		"requirejs",
+		"r.js"
 	],
 	"dependencies": {
 		"amdclean": "*",
