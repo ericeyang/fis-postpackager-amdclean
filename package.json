@@ -1,6 +1,6 @@
 {
 	"name": "fis3-postpackager-amdclean",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Packed AMD File And Converts AMD Code To Standard JavaScript",
 	"main": "index.js",
 	"repository": {
