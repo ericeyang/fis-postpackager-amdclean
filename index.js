@@ -7,6 +7,7 @@
  */
 'use strict';
 const amdclean = require('amdclean');
+const rimraf = require('rimraf');
 const childProcess = require('child_process');
 const iconv = require('iconv-lite');
 const fs = require('fs');
@@ -50,29 +51,11 @@ module.exports = function(ret, pack, settings, opt) {
     arr.length && inner(arr.shift());
   }
 
-  // 删除目录及下面的文件
-  function deleteFolderRecursive(dirname) {
-    var files = [];
-    if (fs.existsSync(dirname)) {
-      files = fs.readdirSync(dirname);
-      files.forEach(function(file, index) {
-        var curPath = dirname + '/' + file;
-        if (fs.statSync(curPath).isDirectory()) {
-          // recurse
-          deleteFolderRecursive(curPath, true);
-        } else {
-          // delete file
-          fs.unlinkSync(curPath);
-        }
-      });
-      fs.rmdirSync(dirname);
-    }
-  }
-
   function doAction(config) {
     var rootDir = '../../.amdclean';
     var content = '';
     var isReturn = false;
+    var _0755 = parseInt('755', 8);
     var file = ret['pkg'][config.release];
 
     if (!file) {
@@ -98,11 +81,11 @@ module.exports = function(ret, pack, settings, opt) {
           ? f._content.replace(new RegExp(baseUrl, 'g'), '.')
           : f._content;
       var fileCnt = new Buffer(fContent);
-      mkdirSync(tempFilePath, 0, function(e) {
+      mkdirSync(tempFilePath, _0755, function(e) {
         if (e) {
           console.log('出错了');
         } else {
-          var fd = fs.openSync(tempFile, 'w', '0644');
+          var fd = fs.openSync(tempFile, 'w', _0755);
           fs.writeSync(fd, fileCnt);
         }
       });
@@ -178,6 +161,9 @@ module.exports = function(ret, pack, settings, opt) {
 
     fis.set(config.release, file.getUrl());
 
-    deleteFolderRecursive(rootDir + '/');
+    // 删除临时文件夹
+    rimraf(rootDir, function (err) {
+      if (err) { console.log(err); }
+    })
   }
 };

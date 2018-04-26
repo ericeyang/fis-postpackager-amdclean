@@ -21,6 +21,7 @@
 	],
 	"dependencies": {
 		"amdclean": "*",
+		"rimraf": "*",
 		"iconv-lite": "*",
 		"uglify-js": "*",
 		"requirejs": "*",
